@@ -10,7 +10,6 @@ import disruptionsRouter from './routes/disruptions.js';
 import statsRouter from './routes/stats.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -27,6 +26,12 @@ app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
 loadGtfs();
 
-app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
-});
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Backend running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
