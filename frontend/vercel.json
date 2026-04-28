@@ -1,6 +1,6 @@
 {
   "framework": "vite",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://BACKEND_URL_PLACEHOLDER/api/:path*" }
+    { "source": "/api/:path*", "destination": "https://backend-manonbsvls-projects.vercel.app/api/:path*" }
   ]
 }
