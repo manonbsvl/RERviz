@@ -1,0 +1,340 @@
+{
+  "Siri": {
+    "ServiceDelivery": {
+      "ResponseTimestamp": "2026-04-27T12:31:17.725Z",
+      "ProducerRef": "IVTR_HET",
+      "ResponseMessageIdentifier": "IVTR_HET:ResponseMessage:6fbcc970-36b1-48d7-8485-c8891b8dceef:LOC:",
+      "StopMonitoringDelivery": [
+        {
+          "ResponseTimestamp": "2026-04-27T12:31:17.756Z",
+          "Version": "2.0",
+          "Status": "true",
+          "MonitoredStopVisit": [
+            {
+              "RecordedAtTime": "2026-04-27T10:49:10.681Z",
+              "ItemIdentifier": "524FOE:Item::SIRI16706533-867818:LOC",
+              "MonitoringRef": {
+                "value": "STIF:StopPoint:BP:491138:"
+              },
+              "MonitoredVehicleJourney": {
+                "LineRef": {
+                  "value": "STIF:Line::C02431:"
+                },
+                "OperatorRef": {
+                  "value": "524FOE:Operator::524FOE:"
+                },
+                "FramedVehicleJourneyRef": {
+                  "DataFrameRef": {
+                    "value": "524FOE:DataFrame::1.0:LOC"
+                  },
+                  "DatedVehicleJourneyRef": "524FOE:VehicleJourney::8292654:LOC"
+                },
+                "DirectionName": [
+                  {
+                    "value": "Aller"
+                  }
+                ],
+                "DestinationRef": {
+                  "value": "STIF:StopPoint:BP:5004:"
+                },
+                "DestinationName": [
+                  {
+                    "value": "Gare d'Etampes"
+                  }
+                ],
+                "VehicleJourneyName": [],
+                "JourneyNote": [
+                  {
+                    "value": "L4404P3"
+                  }
+                ],
+                "MonitoredCall": {
+                  "StopPointName": [
+                    {
+                      "value": "Hôtel de Ville de Méréville"
+                    }
+                  ],
+                  "VehicleAtStop": false,
+                  "DestinationDisplay": [
+                    {
+                      "value": "Gare d'Etampes"
+                    }
+                  ],
+                  "ExpectedArrivalTime": "2026-04-27T13:49:07.000Z",
+                  "ExpectedDepartureTime": "2026-04-27T13:49:07.000Z",
+                  "DepartureStatus": "onTime",
+                  "Order": 3,
+                  "AimedArrivalTime": "2026-04-27T13:49:07.000Z",
+                  "AimedDepartureTime": "2026-04-27T13:49:07.000Z",
+                  "ArrivalStatus": "onTime"
+                },
+                "TrainNumbers": {
+                  "TrainNumberRef": []
+                },
+                "VehicleFeatureRef": []
+              }
+            },
+            {
+              "RecordedAtTime": "2026-04-27T11:49:09.281Z",
+              "ItemIdentifier": "524FOE:Item::SIRI16713479-867818:LOC",
+              "MonitoringRef": {
+                "value": "STIF:StopPoint:BP:491138:"
+              },
+              "MonitoredVehicleJourney": {
+                "LineRef": {
+                  "value": "STIF:Line::C02431:"
+                },
+                "OperatorRef": {
+                  "value": "524FOE:Operator::524FOE:"
+                },
+                "FramedVehicleJourneyRef": {
+                  "DataFrameRef": {
+                    "value": "524FOE:DataFrame::1.0:LOC"
+                  },
+                  "DatedVehicleJourneyRef": "524FOE:VehicleJourney::8292655:LOC"
+                },
+                "DirectionName": [
+                  {
+                    "value": "Aller"
+                  }
+                ],
+                "DestinationRef": {
+                  "value": "STIF:StopPoint:BP:5004:"
+                },
+                "DestinationName": [
+                  {
+                    "value": "Gare d'Etampes"
+                  }
+                ],
+                "VehicleJourneyName": [],
+                "JourneyNote": [
+                  {
+                    "value": "L4404P3"
+                  }
+                ],
+                "MonitoredCall": {
+                  "StopPointName": [
+                    {
+                      "value": "Hôtel de Ville de Méréville"
+                    }
+                  ],
+                  "VehicleAtStop": false,
+                  "DestinationDisplay": [
+                    {
+                      "value": "Gare d'Etampes"
+                    }
+                  ],
+                  "ExpectedArrivalTime": "2026-04-27T14:49:07.000Z",
+                  "ExpectedDepartureTime": "2026-04-27T14:49:07.000Z",
+                  "DepartureStatus": "onTime",
+                  "Order": 3,
+                  "AimedArrivalTime": "2026-04-27T14:49:07.000Z",
+                  "AimedDepartureTime": "2026-04-27T14:49:07.000Z",
+                  "ArrivalStatus": "onTime"
+                },
+                "TrainNumbers": {
+                  "TrainNumberRef": []
+                },
+                "VehicleFeatureRef": []
+              }
+            },
+            {
+              "RecordedAtTime": "2026-04-27T12:19:36.391Z",
+              "ItemIdentifier": "524FOE:Item::SIRI16705447-867444:LOC",
+              "MonitoringRef": {
+                "value": "STIF:StopPoint:BP:480921:"
+              },
+              "MonitoredVehicleJourney": {
+                "LineRef": {
+                  "value": "STIF:Line::C02431:"
+                },
+                "OperatorRef": {
+                  "value": "524FOE:Operator::524FOE:"
+                },
+                "FramedVehicleJourneyRef": {
+                  "DataFrameRef": {
+                    "value": "524FOE:DataFrame::1.0:LOC"
+                  },
+                  "DatedVehicleJourneyRef": "524FOE:VehicleJourney::8292673:LOC"
+                },
+                "DirectionName": [
+                  {
+                    "value": "Retour"
+                  }
+                ],
+                "DestinationRef": {
+                  "value": "STIF:StopPoint:BP:484014:"
+                },
+                "DestinationName": [
+                  {
+                    "value": "Collège Hubert Robert"
+                  }
+                ],
+                "VehicleJourneyName": [],
+                "JourneyNote": [
+                  {
+                    "value": "L4404P4"
+                  }
+                ],
+                "MonitoredCall": {
+                  "StopPointName": [
+                    {
+                      "value": "Hôtel de Ville de Méréville"
+                    }
+                  ],
+                  "VehicleAtStop": false,
+                  "DestinationDisplay": [
+                    {
+                      "value": "Collège  Hubert Robert"
+                    }
+                  ],
+                  "ExpectedArrivalTime": "2026-04-27T12:34:23.000Z",
+                  "ExpectedDepartureTime": "2026-04-27T12:34:23.000Z",
+                  "DepartureStatus": "onTime",
+                  "Order": 12,
+                  "AimedArrivalTime": "2026-04-27T12:33:00.000Z",
+                  "AimedDepartureTime": "2026-04-27T12:33:00.000Z",
+                  "ArrivalStatus": "onTime"
+                },
+                "TrainNumbers": {
+                  "TrainNumberRef": []
+                },
+                "VehicleFeatureRef": []
+              }
+            },
+            {
+              "RecordedAtTime": "2026-04-27T10:33:04.615Z",
+              "ItemIdentifier": "524FOE:Item::SIRI16706528-867444:LOC",
+              "MonitoringRef": {
+                "value": "STIF:StopPoint:BP:480921:"
+              },
+              "MonitoredVehicleJourney": {
+                "LineRef": {
+                  "value": "STIF:Line::C02431:"
+                },
+                "OperatorRef": {
+                  "value": "524FOE:Operator::524FOE:"
+                },
+                "FramedVehicleJourneyRef": {
+                  "DataFrameRef": {
+                    "value": "524FOE:DataFrame::1.0:LOC"
+                  },
+                  "DatedVehicleJourneyRef": "524FOE:VehicleJourney::8292665:LOC"
+                },
+                "DirectionName": [
+                  {
+                    "value": "Retour"
+                  }
+                ],
+                "DestinationRef": {
+                  "value": "STIF:StopPoint:BP:484014:"
+                },
+                "DestinationName": [
+                  {
+                    "value": "Collège Hubert Robert"
+                  }
+                ],
+                "VehicleJourneyName": [],
+                "JourneyNote": [
+                  {
+                    "value": "L4404P4"
+                  }
+                ],
+                "MonitoredCall": {
+                  "StopPointName": [
+                    {
+                      "value": "Hôtel de Ville de Méréville"
+                    }
+                  ],
+                  "VehicleAtStop": false,
+                  "DestinationDisplay": [
+                    {
+                      "value": "Collège  Hubert Robert"
+                    }
+                  ],
+                  "ExpectedArrivalTime": "2026-04-27T13:33:00.000Z",
+                  "ExpectedDepartureTime": "2026-04-27T13:33:00.000Z",
+                  "DepartureStatus": "onTime",
+                  "Order": 12,
+                  "AimedArrivalTime": "2026-04-27T13:33:00.000Z",
+                  "AimedDepartureTime": "2026-04-27T13:33:00.000Z",
+                  "ArrivalStatus": "onTime"
+                },
+                "TrainNumbers": {
+                  "TrainNumberRef": []
+                },
+                "VehicleFeatureRef": []
+              }
+            },
+            {
+              "RecordedAtTime": "2026-04-27T11:35:04.935Z",
+              "ItemIdentifier": "524FOE:Item::SIRI16713474-867444:LOC",
+              "MonitoringRef": {
+                "value": "STIF:StopPoint:BP:480921:"
+              },
+              "MonitoredVehicleJourney": {
+                "LineRef": {
+                  "value": "STIF:Line::C02431:"
+                },
+                "OperatorRef": {
+                  "value": "524FOE:Operator::524FOE:"
+                },
+                "FramedVehicleJourneyRef": {
+                  "DataFrameRef": {
+                    "value": "524FOE:DataFrame::1.0:LOC"
+                  },
+                  "DatedVehicleJourneyRef": "524FOE:VehicleJourney::8292666:LOC"
+                },
+                "DirectionName": [
+                  {
+                    "value": "Retour"
+                  }
+                ],
+                "DestinationRef": {
+                  "value": "STIF:StopPoint:BP:484014:"
+                },
+                "DestinationName": [
+                  {
+                    "value": "Collège Hubert Robert"
+                  }
+                ],
+                "VehicleJourneyName": [],
+                "JourneyNote": [
+                  {
+                    "value": "L4404P4"
+                  }
+                ],
+                "MonitoredCall": {
+                  "StopPointName": [
+                    {
+                      "value": "Hôtel de Ville de Méréville"
+                    }
+                  ],
+                  "VehicleAtStop": false,
+                  "DestinationDisplay": [
+                    {
+                      "value": "Collège  Hubert Robert"
+                    }
+                  ],
+                  "ExpectedArrivalTime": "2026-04-27T14:35:00.000Z",
+                  "ExpectedDepartureTime": "2026-04-27T14:35:00.000Z",
+                  "DepartureStatus": "onTime",
+                  "Order": 12,
+                  "AimedArrivalTime": "2026-04-27T14:35:00.000Z",
+                  "AimedDepartureTime": "2026-04-27T14:35:00.000Z",
+                  "ArrivalStatus": "onTime"
+                },
+                "TrainNumbers": {
+                  "TrainNumberRef": []
+                },
+                "VehicleFeatureRef": []
+              }
+            }
+          ],
+          "StopLineNotice": [],
+          "ServiceException": []
+        }
+      ]
+    }
+  }
+}

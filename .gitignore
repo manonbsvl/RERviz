@@ -1,5 +1,5 @@
 node_modules/
 .env
-data/gtfs/
-*.json
-!package.json
+.env.local
+.vercel/
+traces-du-reseau-ferre-idf.geojson
