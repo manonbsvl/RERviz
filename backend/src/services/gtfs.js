@@ -188,14 +188,12 @@ export function load() {
   }
   console.log(`[GTFS] ${tripsByMission.size} mission keys indexed`);
 
-  // 5. Stop times — loaded async so the server can start immediately
+  // 5. Stop times — sync in production (serverless needs data ready immediately),
+  //    async in dev (so server starts fast)
   const validTripIds = new Set(tripToRouteId.keys());
-  console.log('[GTFS] Stations ready. Loading stop_times in background...');
+  const tripFirstDep = new Map();
 
-  // Build a fast tripId→firstDep lookup to avoid N² scan later
-  const tripFirstDep = new Map(); // tripId → firstDep
-
-  readCsvAsync('stop_times.txt').then(rawStopTimes => {
+  function processStopTimes(rawStopTimes) {
     for (const st of rawStopTimes) {
       if (!validTripIds.has(st.trip_id)) continue;
       if (!stopsByTrip.has(st.trip_id)) stopsByTrip.set(st.trip_id, []);
@@ -206,46 +204,57 @@ export function load() {
         departureTime: st.departure_time || null,
       });
     }
-
     for (const [tripId, stops] of stopsByTrip) {
       stops.sort((a, b) => a.sequence - b.sequence);
       const firstDep = stops[0]?.departureTime ?? stops[0]?.arrivalTime ?? null;
       tripFirstDep.set(tripId, firstDep);
     }
-
-    // Attach firstDep to mission entries
     for (const arr of tripsByMission.values()) {
       for (const entry of arr) {
         entry.firstDep = tripFirstDep.get(entry.tripId) ?? null;
       }
     }
-
     stopTimesReady = true;
     console.log(`[GTFS] ${stopsByTrip.size} trips with stop times ready`);
-  }).catch(err => console.error('[GTFS] stop_times load failed:', err));
+  }
 
-  // Load shapes.txt if present (optional — gives smooth line geometries)
+  function processShapes(rows) {
+    const tmp = new Map();
+    for (const r of rows) {
+      if (!tmp.has(r.shape_id)) tmp.set(r.shape_id, []);
+      tmp.get(r.shape_id).push({
+        seq: parseInt(r.shape_pt_sequence, 10),
+        lat: parseFloat(r.shape_pt_lat),
+        lon: parseFloat(r.shape_pt_lon),
+      });
+    }
+    for (const [id, pts] of tmp) {
+      pts.sort((a, b) => a.seq - b.seq);
+      shapeCoords.set(id, pts.map(p => [p.lat, p.lon]));
+    }
+    lineGeometryCache = null;
+    console.log(`[GTFS] ${shapeCoords.size} shapes loaded`);
+  }
+
+  const isProduction = process.env.NODE_ENV === 'production';
   const shapesPath = path.join(GTFS_DIR, 'shapes.txt');
-  if (fs.existsSync(shapesPath)) {
-    readCsvAsync('shapes.txt').then(rows => {
-      const tmp = new Map(); // shape_id → [{ seq, lat, lon }]
-      for (const r of rows) {
-        if (!tmp.has(r.shape_id)) tmp.set(r.shape_id, []);
-        tmp.get(r.shape_id).push({
-          seq: parseInt(r.shape_pt_sequence, 10),
-          lat: parseFloat(r.shape_pt_lat),
-          lon: parseFloat(r.shape_pt_lon),
-        });
-      }
-      for (const [id, pts] of tmp) {
-        pts.sort((a, b) => a.seq - b.seq);
-        shapeCoords.set(id, pts.map(p => [p.lat, p.lon]));
-      }
-      lineGeometryCache = null; // invalidate so next call rebuilds with shapes
-      console.log(`[GTFS] ${shapeCoords.size} shapes loaded`);
-    }).catch(err => console.error('[GTFS] shapes load failed:', err));
+
+  if (isProduction) {
+    console.log('[GTFS] Production mode — loading stop_times synchronously...');
+    processStopTimes(readCsv('stop_times.txt'));
+    if (fs.existsSync(shapesPath)) {
+      processShapes(readCsv('shapes.txt'));
+    }
   } else {
-    console.log('[GTFS] No shapes.txt found — using stop-based line geometry');
+    console.log('[GTFS] Dev mode — loading stop_times in background...');
+    readCsvAsync('stop_times.txt').then(processStopTimes)
+      .catch(err => console.error('[GTFS] stop_times load failed:', err));
+    if (fs.existsSync(shapesPath)) {
+      readCsvAsync('shapes.txt').then(processShapes)
+        .catch(err => console.error('[GTFS] shapes load failed:', err));
+    } else {
+      console.log('[GTFS] No shapes.txt found — using stop-based line geometry');
+    }
   }
 }
 
