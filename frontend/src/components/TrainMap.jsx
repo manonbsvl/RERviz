@@ -13,10 +13,31 @@ const TILES = {
   dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
 };
 
-function makeTrainIcon(lineName, delay, selected) {
+function makeTrainIcon(lineName, delay, selected, cancelled = false) {
   const color = LINE_COLORS[lineName] ?? '#888';
   const textColor = ['C', 'J'].includes(lineName) ? '#000' : '#fff';
   const size = selected ? 34 : 26;
+
+  if (cancelled) {
+    return L.divIcon({
+      className: '',
+      html: `<div style="
+        background:#9ca3af;color:#fff;
+        border:2px solid #6b7280;border-radius:50%;
+        width:${size}px;height:${size}px;
+        display:flex;align-items:center;justify-content:center;
+        font-size:${selected ? 13 : 10}px;font-weight:700;
+        box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer;font-family:sans-serif;
+        opacity:0.5;position:relative;
+      ">
+        ${lineName}
+        <div style="position:absolute;top:50%;left:10%;width:80%;height:2px;background:#fff;transform:rotate(-45deg);"></div>
+      </div>`,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+    });
+  }
+
   const border = selected
     ? `3px solid #fff`
     : delay > 5
@@ -93,7 +114,7 @@ const TrainMap = forwardRef(function TrainMap({ selectedTrain, onSelectTrain, on
       const train = marker._trainData;
       if (!train) continue;
       const selected = selectedTrain?.mission === mission;
-      marker.setIcon(makeTrainIcon(train.lineName, train.delay ?? 0, selected));
+      marker.setIcon(makeTrainIcon(train.lineName, train.delay ?? 0, selected, train.cancelled));
       if (selected) {
         marker.openPopup();
         mapInstanceRef.current?.panTo([train.lat, train.lon], { animate: true });
@@ -140,7 +161,14 @@ const TrainMap = forwardRef(function TrainMap({ selectedTrain, onSelectTrain, on
       const map = mapInstanceRef.current;
       if (!map) return;
       try {
-        const positions = await getAllTrainPositions();
+        const bounds = map.getBounds();
+        const bbox = {
+          south: bounds.getSouth(),
+          west: bounds.getWest(),
+          north: bounds.getNorth(),
+          east: bounds.getEast(),
+        };
+        const positions = await getAllTrainPositions(bbox);
         const currentKeys = new Set(positions.map(p => p.shortName ?? p.mission).filter(Boolean));
 
         // Count per line
@@ -164,9 +192,17 @@ const TrainMap = forwardRef(function TrainMap({ selectedTrain, onSelectTrain, on
           const selected = selectedRef.current
             ? (selectedRef.current.shortName ?? selectedRef.current.mission) === markerKey
             : false;
-          const icon = makeTrainIcon(train.lineName, train.delay ?? 0, selected);
-          const latlng = [train.lat, train.lon];
+          const icon = makeTrainIcon(train.lineName, train.delay ?? 0, selected, train.cancelled);
+          const latlng = train.adjustedLat != null
+            ? [train.adjustedLat, train.adjustedLon]
+            : [train.lat, train.lon];
           const displayCode = train.shortName ?? train.mission ?? '';
+
+          const delayText = train.cancelled
+            ? '<div style="color:#ef4444;font-weight:600;font-size:11px">Train supprim\u00e9</div>'
+            : train.realtime && train.delay != null
+            ? `<div style="color:${train.delay > 5 ? '#ef4444' : train.delay > 2 ? '#f59e0b' : '#22c55e'};font-weight:600;font-size:11px">${train.delay > 0 ? '+' + train.delay + ' min' : 'A l\'heure'}</div>`
+            : '';
 
           const popup = L.popup({ offset: [0, -10], closeButton: false, autoPan: false })
             .setContent(`
@@ -174,13 +210,14 @@ const TrainMap = forwardRef(function TrainMap({ selectedTrain, onSelectTrain, on
                 <div style="font-weight:700;margin-bottom:2px">
                   <span style="
                     display:inline-flex;align-items:center;justify-content:center;
-                    background:${LINE_COLORS[train.lineName] ?? '#888'};
-                    color:${['C','J'].includes(train.lineName) ? '#000' : '#fff'};
+                    background:${train.cancelled ? '#9ca3af' : (LINE_COLORS[train.lineName] ?? '#888')};
+                    color:${train.cancelled ? '#fff' : (['C','J'].includes(train.lineName) ? '#000' : '#fff')};
                     border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;
                     margin-right:5px;vertical-align:middle;
                   ">${train.lineName}</span>
                   ${displayCode}
                 </div>
+                ${delayText}
                 <div style="color:#555;margin-bottom:3px">\u2192 ${train.destination ?? '?'}</div>
                 <div style="color:#999;font-size:10px">${train.fromStop ?? ''}<br>\u2192 ${train.toStop ?? ''}</div>
               </div>`);
@@ -210,7 +247,20 @@ const TrainMap = forwardRef(function TrainMap({ selectedTrain, onSelectTrain, on
 
     refresh();
     intervalRef.current = setInterval(refresh, 30_000);
-    return () => clearInterval(intervalRef.current);
+
+    let moveTimeout;
+    const mapForMove = mapInstanceRef.current;
+    const onMove = () => {
+      clearTimeout(moveTimeout);
+      moveTimeout = setTimeout(refresh, 500);
+    };
+    mapForMove?.on('moveend', onMove);
+
+    return () => {
+      clearInterval(intervalRef.current);
+      clearTimeout(moveTimeout);
+      mapForMove?.off('moveend', onMove);
+    };
   }, []);
 
   function toggleLine(ln) {
