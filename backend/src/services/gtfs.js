@@ -258,6 +258,36 @@ export function load() {
   }
 }
 
+export function getStationsInBbox(south, west, north, east, limit = 20) {
+  const centerLat = (south + north) / 2;
+  const centerLon = (west + east) / 2;
+
+  const inBbox = stations.filter(s =>
+    s.lat >= south && s.lat <= north && s.lon >= west && s.lon <= east
+  );
+
+  inBbox.sort((a, b) => {
+    const da = (a.lat - centerLat) ** 2 + (a.lon - centerLon) ** 2;
+    const db = (b.lat - centerLat) ** 2 + (b.lon - centerLon) ** 2;
+    return da - db;
+  });
+
+  return inBbox.slice(0, limit);
+}
+
+export function getTripStationSchedule(tripId) {
+  const stops = stopsByTrip.get(tripId);
+  if (!stops) return new Map();
+  const schedule = new Map();
+  for (const s of stops) {
+    const primId = stopToPrimId.get(s.stopId);
+    if (!primId) continue;
+    const depMs = timeStrToMs(s.departureTime ?? s.arrivalTime ?? '');
+    if (depMs) schedule.set(primId, depMs);
+  }
+  return schedule;
+}
+
 /**
  * Search stations by name (case-insensitive substring).
  * Returns up to `limit` results sorted by relevance (starts-with first).
@@ -614,7 +644,7 @@ export function getDirectionGroups(lineRef, stationPrimId) {
   return result;
 }
 
-function timeStrToMs(timeStr) {
+export function timeStrToMs(timeStr) {
   if (!timeStr) return 0;
   const [h, m, s] = timeStr.split(':').map(Number);
   return ((h * 60 + m) * 60 + (s || 0)) * 1000;
