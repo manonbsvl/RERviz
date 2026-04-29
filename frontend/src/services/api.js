@@ -28,8 +28,12 @@ export async function getTrainPositions(stationId) {
   return res.json();
 }
 
-export async function getAllTrainPositions() {
-  const res = await fetch(`${BASE}/trains/positions`);
+export async function getAllTrainPositions(bbox) {
+  let url = `${BASE}/trains/positions`;
+  if (bbox) {
+    url += `?bbox=${bbox.south},${bbox.west},${bbox.north},${bbox.east}`;
+  }
+  const res = await fetch(url);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
