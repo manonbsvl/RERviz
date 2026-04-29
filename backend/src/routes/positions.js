@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { getStopMonitoring, parseMonitoredVisits } from '../services/prim.js';
 import { findTripByMission, interpolatePosition, isStopTimesReady, getRouteByLineRef, getLineGeometries, getAllActivePositions } from '../services/gtfs.js';
+import { enrichWithRealtime } from '../services/realtime-enrichment.js';
 
 const router = Router();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -53,9 +54,25 @@ router.get('/lines/geometry', (req, res) => {
 });
 
 // GET /api/trains/positions — all active trains (GTFS-based)
-router.get('/trains/positions', (req, res) => {
+router.get('/trains/positions', async (req, res) => {
   if (!isStopTimesReady()) return res.status(503).json({ error: 'Loading' });
-  res.json(getAllActivePositions());
+
+  const trains = getAllActivePositions();
+  const { bbox } = req.query;
+
+  if (bbox) {
+    const parts = bbox.split(',').map(Number);
+    if (parts.length === 4 && parts.every(n => !isNaN(n))) {
+      const [south, west, north, east] = parts;
+      try {
+        await enrichWithRealtime(trains, { south, west, north, east });
+      } catch (err) {
+        console.error('[positions] enrichment failed, returning GTFS-only:', err.message);
+      }
+    }
+  }
+
+  res.json(trains);
 });
 
 // GET /api/station/:id/positions
